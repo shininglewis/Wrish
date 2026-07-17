@@ -1,0 +1,47 @@
+{
+  "build": {
+    "beforeBuildCommand": "",
+    "beforeDevCommand": "",
+    "frontendDist": "src",
+    "devUrl": "tauri://localhost"
+  },
+  "bundle": {
+    "active": true,
+    "category": "Productivity",
+    "copyright": "",
+    "icon": ["icons/icon.ico"],
+    "targets": "msi",
+    "windows": {
+      "webviewInstallMode": {
+        "type": "skip"
+      },
+      "allowDowngrades": true
+    }
+  },
+  "productName": "Wrish",
+  "version": "1.0.0",
+  "identifier": "com.wrish.app",
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Wrish - 未命名",
+        "width": 900,
+        "height": 600,
+        "minWidth": 400,
+        "minHeight": 300,
+        "decorations": false,
+        "transparent": true,
+        "center": true,
+        "resizable": true,
+        "fullscreen": false,
+        "visible": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'",
+      "capabilities": []
+    }
+  }
+}

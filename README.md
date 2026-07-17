@@ -53,20 +53,32 @@
 
 ---
 
+## 两个版本
+
+本项目提供两个实现版本，功能完全一致，根据你的需求选择：
+
+| | **WPF 版** | **Tauri 版** |
+|--|-----------|-------------|
+| **路径** | `Wrish/` | `wrish-tauri/` |
+| **技术栈** | C# + WPF + WinForms | Rust + Tauri + HTML/CSS/JS |
+| **体积** | ~400KB（需 .NET 10） | **~2-3MB（完全独立）** |
+| **依赖** | .NET 10 Desktop Runtime | **仅 WebView2（Win10/11 预装）** |
+| **前端渲染** | WPF RichTextBox | WebView2 + CSS |
+| **系统 API** | .NET P/Invoke | Rust 原生 |
+| **适用场景** | 已装 .NET 的环境 | **零依赖部署** |
+
+---
+
 ## 下载与使用
 
 ### 方式一：下载 Release（推荐）
-前往 [Releases](https://github.com/YOUR_USERNAME/wrish/releases) 页面下载最新版 `Wrish.exe`。
+前往 [Releases](https://github.com/shininglewis/Wrish/releases) 页面下载：
+- **WPF 版**：`Wrish.exe`（需 [.NET 10 Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)）
+- **Tauri 版**：`wrish-tauri.exe`（完全独立，无依赖）
 
-**运行要求**：Windows 10/11 x64，且已安装 [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)
-
-### 方式二：自行编译
+### 方式二：自行编译 WPF 版
 
 ```bash
-# 克隆仓库
-git clone https://github.com/YOUR_USERNAME/wrish.git
-cd wrish
-
 # 编译
 dotnet build Wrish/Wrish.csproj
 
@@ -76,11 +88,26 @@ dotnet run --project Wrish/Wrish.csproj
 # 发布（框架依赖，约 400KB）
 dotnet publish Wrish/Wrish.csproj -c Release -o publish --self-contained false
 
-# 发布（完全独立，约 150MB，无需 .NET Runtime）
+# 发布（完全独立，约 150MB）
 dotnet publish Wrish/Wrish.csproj -c Release -o publish --self-contained true
 ```
 
-> **注意**：项目使用 `net10.0-windows` 目标框架，请确保本地已安装 [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+> 需要 [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+
+### 方式三：自行编译 Tauri 版
+
+```bash
+# 1. 安装 Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# 2. 编译
+cd wrish-tauri
+cargo build --release
+
+# 输出: target/release/wrish-tauri.exe（约 2-3MB）
+```
+
+> 需要 [Rust](https://rustup.rs/) 和 Windows WebView2（Win10/11 默认已装）
 
 ---
 
