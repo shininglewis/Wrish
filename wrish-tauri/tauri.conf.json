@@ -10,7 +10,7 @@
     "category": "Productivity",
     "copyright": "",
     "icon": ["icons/icon.ico"],
-    "targets": "msi",
+    "targets": ["msi"],
     "windows": {
       "webviewInstallMode": {
         "type": "skip"
