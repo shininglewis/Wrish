@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>Wrish</AssemblyName>
+    <RootNamespace>Wrish</RootNamespace>
+    <ApplicationIcon>..\wrish.ico</ApplicationIcon>
+    <!--
+      方案A：小体积，依赖系统已有 .NET 8 Runtime
+      dotnet publish -c Release -o publish /p:SelfContained=false
+      输出约 200KB
+
+      方案B：独立运行，自带 .NET 8 Runtime
+      dotnet publish -c Release -o publish /p:SelfContained=true
+      输出约 150MB，但目标机器无需安装 .NET
+    -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\wrish.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

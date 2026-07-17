@@ -1,0 +1,42 @@
+## .NET / Visual Studio / Rider
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Bb]in/
+[Oo]bj/
+publish/
+app.publish/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.rsuser
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Wrish temporary draft
+.temp_draft.txt
+
+# Old Python build artifacts
+dist/
+build/
+*.spec
+__pycache__/
+*.pyc
