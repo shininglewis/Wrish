@@ -165,14 +165,13 @@ document.addEventListener('selectionchange', () => {
 
 // 键盘快捷键（window 捕获阶段，确保 Escape 不被 contenteditable 拦截）
 window.addEventListener('keydown', async (e) => {
-    // Esc 隐藏窗口
+    // Esc 隐藏窗口（通过 Rust command）
     if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
-        if (window.__TAURI__ && window.__TAURI__.window) {
+        if (window.__TAURI__ && window.__TAURI__.core) {
             try {
-                const { getCurrentWindow } = window.__TAURI__.window;
-                await getCurrentWindow().hide();
+                await window.__TAURI__.core.invoke('hide_window');
             } catch (err) {
                 console.error('Hide error:', err);
             }

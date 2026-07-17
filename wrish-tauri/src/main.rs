@@ -111,6 +111,11 @@ fn is_dirty(state: tauri::State<AppState>) -> bool {
     *state.is_dirty.lock().unwrap()
 }
 
+#[tauri::command]
+fn hide_window(window: tauri::Window) {
+    let _ = window.hide();
+}
+
 // ═══════════════════════════════════════════════════════
 //  主函数
 // ═══════════════════════════════════════════════════════
@@ -131,6 +136,7 @@ fn main() {
             set_theme,
             set_dirty,
             is_dirty,
+            hide_window,
         ])
         .setup(|app| {
             // ─── 系统托盘 ───
