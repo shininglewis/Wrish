@@ -163,14 +163,19 @@ document.addEventListener('selectionchange', () => {
     scrollToCenter();
 });
 
-// 键盘快捷键
-document.addEventListener('keydown', async (e) => {
+// 键盘快捷键（window 捕获阶段，确保 Escape 不被 contenteditable 拦截）
+window.addEventListener('keydown', async (e) => {
     // Esc 隐藏窗口
     if (e.key === 'Escape') {
         e.preventDefault();
-        if (window.__TAURI__) {
-            const { getCurrentWindow } = window.__TAURI__.window;
-            await getCurrentWindow().hide();
+        e.stopPropagation();
+        if (window.__TAURI__ && window.__TAURI__.window) {
+            try {
+                const { getCurrentWindow } = window.__TAURI__.window;
+                await getCurrentWindow().hide();
+            } catch (err) {
+                console.error('Hide error:', err);
+            }
         }
         return;
     }
