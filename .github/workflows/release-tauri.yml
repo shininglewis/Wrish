@@ -19,10 +19,13 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli
+
       - name: Build Tauri
         run: |
           cd wrish-tauri
-          cargo build --release
+          cargo tauri build
 
       - name: Upload Release
         uses: softprops/action-gh-release@v2
