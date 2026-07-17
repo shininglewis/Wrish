@@ -82,7 +82,7 @@ fn save_as(content: String, state: tauri::State<AppState>) -> Result<String, Str
 fn auto_save(content: String, state: tauri::State<AppState>) {
     let file_lock = state.current_file.lock().unwrap();
 
-    if let Some(ref path) = file_lock {
+    if let Some(ref path) = *file_lock {
         let _ = fs::write(path, content);
     } else {
         // 未命名文档写入临时文件
@@ -164,10 +164,11 @@ fn main() {
 
             // ─── 窗口事件：关闭时隐藏到托盘 ───
             let window = app.get_webview_window("main").unwrap();
-            window.on_window_event(|window, event| {
+            let window_clone = window.clone();
+            window.on_window_event(move |event| {
                 if let WindowEvent::CloseRequested { api, .. } = event {
                     api.prevent_close();
-                    let _ = window.hide();
+                    let _ = window_clone.hide();
                 }
             });
 
