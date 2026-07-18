@@ -3,47 +3,48 @@
 let currentFileName = "未命名";
 let isDirty = false;
 let autoSaveTimer = null;
-let pendingScroll = false;
 let isDark = true;
 let wordCountVisible = true;
 let lastFontSize = 18;
 
+// ─── 获取光标所在行 ───
+function getActiveLine() {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return null;
+
+    const node = sel.anchorNode;
+    if (!node) return null;
+
+    const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    return element.closest('.line');
+}
+
 // ─── 打字机居中 ───
 function scrollToCenter() {
-    if (pendingScroll) return;
-    pendingScroll = true;
+    const activeLine = getActiveLine();
+    if (!activeLine) return;
 
-    requestAnimationFrame(() => {
-        pendingScroll = false;
-        const sel = window.getSelection();
-        if (!sel.rangeCount) return;
+    const editor = document.getElementById('editor');
+    // 获取行相对于 editor 内容顶部的位置
+    const lineTop = activeLine.offsetTop;
+    const lineHeight = activeLine.offsetHeight;
+    const lineCenter = lineTop + lineHeight / 2;
+    const viewCenter = editor.clientHeight / 2;
 
-        const range = sel.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-        if (!rect.height) return;
+    // 目标滚动位置 = 行中心 - 视口中心
+    const targetScroll = lineCenter - viewCenter;
 
-        const editor = document.getElementById('editor');
-        const lineCenter = rect.top + rect.height / 2;
-        const viewCenter = editor.clientHeight / 2;
-        const delta = lineCenter - viewCenter;
-
-        if (Math.abs(delta) <= 2) return;
-
-        editor.scrollTop += delta;
+    // 平滑滚动
+    editor.scrollTo({
+        top: targetScroll,
+        behavior: 'smooth'
     });
 }
 
 // ─── 焦点暗淡 ───
 function refreshFocus() {
     const lines = document.querySelectorAll('.line');
-    const sel = window.getSelection();
-    if (!sel.rangeCount) return;
-
-    let activeLine = null;
-    const node = sel.anchorNode;
-    if (node) {
-        activeLine = node.nodeType === Node.TEXT_NODE ? node.parentElement.closest('.line') : node.closest('.line');
-    }
+    const activeLine = getActiveLine();
 
     lines.forEach(line => {
         line.classList.toggle('active', line === activeLine);
