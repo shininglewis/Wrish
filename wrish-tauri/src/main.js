@@ -255,15 +255,20 @@ window.addEventListener('keydown', async (e) => {
     }
 });
 
-// Ctrl + 滚轮 字体大小
-editor.addEventListener('wheel', (e) => {
+// Ctrl + 滚轮 字体大小（window 级别，防止 contenteditable 拦截）
+window.addEventListener('wheel', (e) => {
     if (e.ctrlKey) {
         e.preventDefault();
-        const delta = e.deltaY > 0 ? -1 : 1;
-        lastFontSize = Math.max(8, Math.min(72, lastFontSize + delta));
+        e.stopImmediatePropagation();
+        const step = e.deltaY > 0 ? -2 : 2;
+        lastFontSize = Math.max(10, Math.min(72, lastFontSize + step));
         document.documentElement.style.setProperty('--font-size', lastFontSize + 'px');
+        // 同步更新行高最小高度
+        document.querySelectorAll('.line').forEach(line => {
+            line.style.minHeight = `calc(${lastFontSize}px * var(--line-height))`;
+        });
     }
-}, { passive: false });
+}, { passive: false, capture: true });
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
