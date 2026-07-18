@@ -116,6 +116,12 @@ fn hide_window(window: tauri::Window) {
     let _ = window.hide();
 }
 
+#[tauri::command]
+fn new_document(state: tauri::State<AppState>) {
+    *state.current_file.lock().unwrap() = None;
+    *state.is_dirty.lock().unwrap() = false;
+}
+
 // ═══════════════════════════════════════════════════════
 //  主函数
 // ═══════════════════════════════════════════════════════
@@ -137,6 +143,7 @@ fn main() {
             set_dirty,
             is_dirty,
             hide_window,
+            new_document,
         ])
         .setup(|app| {
             // ─── 系统托盘 ───

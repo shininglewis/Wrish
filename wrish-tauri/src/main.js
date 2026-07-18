@@ -200,6 +200,10 @@ window.addEventListener('keydown', async (e) => {
                     isDirty = false;
                     updateTitle();
                     updateWordCount();
+                    // 通知 Rust 后端清除当前文件路径
+                    if (window.__TAURI__ && window.__TAURI__.core) {
+                        window.__TAURI__.core.invoke('new_document');
+                    }
                 }
                 break;
 
