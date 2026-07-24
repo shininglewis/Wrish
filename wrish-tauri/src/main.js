@@ -43,12 +43,16 @@ function scrollToCenter() {
 
 // ─── 焦点暗淡 ───
 function refreshFocus() {
-    const lines = document.querySelectorAll('.line');
-    const activeLine = getActiveLine();
-
-    lines.forEach(line => {
-        line.classList.toggle('active', line === activeLine);
+    // 先移除所有行的高亮，确保没有残留
+    document.querySelectorAll('.line.active').forEach(line => {
+        line.classList.remove('active');
     });
+
+    // 再给当前行添加高亮
+    const activeLine = getActiveLine();
+    if (activeLine) {
+        activeLine.classList.add('active');
+    }
 }
 
 // ─── 字数统计 ───
