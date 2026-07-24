@@ -100,23 +100,51 @@ function setText(text) {
     }
 }
 
-// ─── 确保每行都是 .line div ───
+// ─── 强制规范化行结构 ───
+// contenteditable 合并行后会破坏 DOM 结构，必须完全重建
 function normalizeLines() {
     const editor = document.getElementById('editor');
-    const children = Array.from(editor.childNodes);
-    children.forEach(child => {
-        if (child.nodeType === Node.TEXT_NODE) {
-            const div = document.createElement('div');
-            div.className = 'line';
-            div.textContent = child.textContent;
-            editor.replaceChild(div, child);
-        } else if (child.tagName !== 'DIV' || !child.classList.contains('line')) {
-            const div = document.createElement('div');
-            div.className = 'line';
-            div.appendChild(child.cloneNode(true));
-            editor.replaceChild(div, child);
-        }
+    const sel = window.getSelection();
+
+    // 1. 保存光标在纯文本中的字符偏移
+    let cursorOffset = 0;
+    if (sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0);
+        const preCaretRange = range.cloneRange();
+        preCaretRange.selectNodeContents(editor);
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        cursorOffset = preCaretRange.toString().length;
+    }
+
+    // 2. 获取纯文本并按换行分割
+    const text = editor.innerText || '';
+    const lines = text.split('\n');
+
+    // 3. 完全重建 DOM（每行一个 div.line）
+    editor.innerHTML = '';
+    lines.forEach((lineText) => {
+        const div = document.createElement('div');
+        div.className = 'line';
+        div.textContent = lineText;
+        editor.appendChild(div);
     });
+
+    // 4. 恢复光标位置
+    let accumulated = 0;
+    for (const lineDiv of editor.children) {
+        const lineLen = lineDiv.textContent.length;
+        if (accumulated + lineLen >= cursorOffset) {
+            const offsetInLine = Math.max(0, cursorOffset - accumulated);
+            const textNode = lineDiv.firstChild || lineDiv.appendChild(document.createTextNode(''));
+            const range = document.createRange();
+            range.setStart(textNode, Math.min(offsetInLine, textNode.length));
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+            break;
+        }
+        accumulated += lineLen + 1; // +1 for newline
+    }
 }
 
 // ─── 主题切换 ───
